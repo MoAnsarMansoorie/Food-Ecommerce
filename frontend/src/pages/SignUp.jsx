@@ -1,19 +1,25 @@
 import React, { useState } from "react";
 import loginAnimation from "../assets/login-animation.gif";
 import { BiHide, BiShow } from "react-icons/bi";
-import { Link, useNavigate } from "react-router-dom";
-import { ImagetoBase64 } from "../utility/ImagetoBase64";
+import { Link } from "react-router-dom";
 
-function Login() {
-    const navigate = useNavigate()
-    const [showPassword, setShowPassword] = useState(false);
+function SignUp() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [data, setData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
+    confirmPassword: ""
   });
 
   const handleShowPassword = () => {
     setShowPassword((prev) => !prev);
+  };
+
+  const handleShowConfirmPassword = () => {
+    setShowConfirmPassword((prev) => !prev);
   };
 
   const handleInputChange = (e) => {
@@ -27,18 +33,16 @@ function Login() {
   }
   console.log(data);
 
-  const handleUploadImageProfile = async (e) => {
-    const data = await ImagetoBase64(e.target.files[0])
-    console.log(data);
-
-  }
-
   const handleSubmit = (e) => {
     e.preventDefault()
-    const {email, password} = data
-    if(email && password){
-        alert("successful")
-        navigate("/login")
+    const {firstName, email, password, confirmPassword} = data
+    if(firstName && email && password && confirmPassword){
+        if(password === confirmPassword){
+            alert("Successful")
+        }
+        else{
+            alert("password and confirmPassword is not equal!")
+        }
     }
     else{
         alert("These fields are mandatory!")
@@ -53,14 +57,33 @@ function Login() {
           <img src={loginAnimation} alt="signUpIMG" className="w-full" />
 
           <label htmlFor="profileImage">
-          <div className="absolute bottom-0 h-1/3 w-full bg-slate-500 text-center cursor-pointer">
-            <p className="text-sm p-1 text-white">Upload</p>
-          </div>
-          <input type="file" id="profileImage" accept="image/*" className="hidden" onChange={handleUploadImageProfile}/>
+            <div className="absolute bottom-0 bg-slate-500 h-1/3 w-full text-center">
+                <p className="text-sm p-1 text-white">Upload</p>
+            </div>
           </label>
         </div>
 
         <form className="w-full py-3 flex flex-col" onSubmit={handleSubmit}>
+          <label htmlFor="firstName">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            value={data.firstName} 
+            onChange={handleInputChange}
+            className="w-full mt-1 mb-2 bg-slate-200 px-2 py-1 rounded focus-within:outline-blue-300"
+          />
+
+          <label htmlFor="lastName">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            value={data.lastName}
+            onChange={handleInputChange}
+            className="w-full mt-1 mb-2 bg-slate-200 px-2 py-1 rounded focus-within:outline-blue-300"
+          />
+
           <label htmlFor="email">Email</label>
           <input
             type="email"
@@ -89,19 +112,37 @@ function Login() {
             </span>
           </div>
 
+          <label htmlFor="confirmPassword">Password</label>
+          <div className="flex px-2 py-1 rounded mt-1 mb-2 bg-slate-200 focus-within:outline focus-within:outline-blue-300">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              id="confirmPassword"
+              name="confirmPassword"
+              value={data.confirmPassword}
+              onChange={handleInputChange}
+              className="w-full bg-slate-200 border-none outline-none"
+            />
+            <span
+              className="flex text-xl cursor-pointer"
+              onClick={handleShowConfirmPassword}
+            >
+              {showConfirmPassword ? <BiShow /> : <BiHide />}
+            </span>
+          </div>
+
           <button className="bg-red-500 w-full max-w-[150px] m-auto hover:bg-red-600 cursor-pointer text-white text-xl font-medium text-center py-1 rounded-full mt-4">
-            Log In
+            Sign Up
           </button>
         </form>
         <p className="text-sm text-left mt-2">
-          Don't Have an Account?{" "}
-          <Link to={"/signup"} className="text-red-500 underline">
-            Sign Up
+          Already, Have an Account?{" "}
+          <Link to={"/login"} className="text-red-500 underline">
+            LogIn
           </Link>
         </p>
       </div>
     </div>
-  )
+  );
 }
 
-export default Login
+export default SignUp;
