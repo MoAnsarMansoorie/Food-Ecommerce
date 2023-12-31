@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import loginAnimation from "../assets/login-animation.gif";
 import { BiHide, BiShow } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { ImagetoBase64 } from "../utility/ImagetoBase64";
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,7 +12,8 @@ function SignUp() {
     lastName: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    image: ""
   });
 
   const handleShowPassword = () => {
@@ -33,6 +35,19 @@ function SignUp() {
   }
   console.log(data);
 
+  const handleUploadImageProfile = async (e) => {
+    const data = await ImagetoBase64(e.target.files[0])
+    // console.log(data);
+
+    setData((prev) => {
+      return{
+        ...prev,
+        image: data
+      }
+    })
+
+  } 
+
   const handleSubmit = (e) => {
     e.preventDefault()
     const {firstName, email, password, confirmPassword} = data
@@ -53,13 +68,14 @@ function SignUp() {
     <div className="p-3 md:p-4">
       <div className="w-full max-w-sm bg-white m-auto flex flex-col p-4">
         {/* <h1 className='text-center text-2xl font-bold'>SignUp Page</h1> */}
-        <div className="w-20 overflow-hidden rounded-full drop-shadow-md shadow-md m-auto relative">
-          <img src={loginAnimation} alt="signUpIMG" className="w-full" />
+        <div className="w-20 h-20 overflow-hidden rounded-full drop-shadow-md shadow-md m-auto relative">
+          <img src={data.image ? data.image : loginAnimation} alt="signUpIMG" className="w-full h-full" />
 
           <label htmlFor="profileImage">
-            <div className="absolute bottom-0 bg-slate-500 h-1/3 w-full text-center">
-                <p className="text-sm p-1 text-white">Upload</p>
-            </div>
+          <div className="absolute bottom-0 h-1/3 w-full bg-slate-500 bg-opacity-50 text-center cursor-pointer">
+            <p className="text-sm p-1 text-white">Upload</p>
+          </div>
+          <input type="file" id="profileImage" accept="image/*" className="hidden" onChange={handleUploadImageProfile}/>
           </label>
         </div>
 

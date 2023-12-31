@@ -10,4 +10,4 @@ function ImagetoBase64 (file) {
     return data
 }
 
-export default ImagetoBase64
+export {ImagetoBase64}
